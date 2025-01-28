@@ -118,7 +118,7 @@ class Particles:
         """Uses Monte Carlo Localization to update particle states and weights"""
         
         # motion model
-        del_rot1 = np.atan2(control[1][1] - control[0][1], control[1][0] - control[0][0]) \
+        del_rot1 = np.arctan2(control[1][1] - control[0][1], control[1][0] - control[0][0]) \
              - control[0][2]
         diff = np.diff(control[:, :2], axis=0)
         del_trans = np.sqrt(np.sum(diff ** 2, axis=-1))
