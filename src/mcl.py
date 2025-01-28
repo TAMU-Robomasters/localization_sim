@@ -154,8 +154,8 @@ class Particles:
         y_z = y + np.sin(particle_angles) * measurement
         # 2. find the distance from each endpt to the respective nearest wall
         # use pre computed data for O(1) calculation
-        x_indices = np.astype((x_z - self.offset[0]) / self.resamp_factor , np.int32)
-        y_indices = np.astype((y_z - self.offset[1]) / self.resamp_factor, np.int32)
+        x_indices = (x_z - self.offset[0]).astype(np.int32) / self.resamp_factor
+        y_indices = (y_z - self.offset[1]).astype(np.int32) / self.resamp_factor
         print(x_indices.shape, y_indices.shape)
         print(self.distances.shape)
         print(self.offset)
