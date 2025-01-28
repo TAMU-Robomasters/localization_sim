@@ -10,6 +10,17 @@ def draw_rays(surface: pygame.surface, color: pygame.Color, center, rays, width:
     
 
 def compute_rays(num_rays: int, center, angle, map: map.Map):
+    """ Performs ray casting algorithm
+
+    Args:
+        num_rays (int): Ray's are evenly spaced between 0 and 2pi
+        center (2x1 array): the origin of all the rays
+        angle (float): the angular offset of all the rays 
+        map (map.Map): A list of closed contours that describe the layout of the map
+
+    Returns:
+        nx2x1 numpy array: the coordinates of where all the rays collided
+    """
     #TODO figure out best way to actually insert in numpy arrary
     rays = np.empty((1, 2))
     total_walls = np.concat([np.concat((boundary[:-1], boundary[1:]), axis=1) for boundary in map.boundaries]) 
@@ -25,21 +36,31 @@ def compute_rays(num_rays: int, center, angle, map: map.Map):
 
 
 def _cast_ray(ray, walls):
+    """Given the unit vector of a ray find where it collides against a wall.
+    Algorithm basically checks every wall to see if the ray collided against it or not.
     
-    # x1, y1 = walls[0][0], walls[0][1]
-    # x2, y2 = walls[1][0], walls[1][1] 
+    Formula is from https://youtu.be/TOEi6T2mtHo?si=HrVhc1_BFAD5qMuc and was numpy-ified so 
+    that it all runs in C
+
+    Args:
+        ray (4x1 numpy array): the first two elements are the origin of the ray (i.e. LiDAR location).
+        The last two elements contain the x and y of the ray if it were to only go one unit in the rays
+        direction. It basically the unit vector translated to the origin of the ray.
+        
+        walls (nx4x1 numpy array): a list of 4x1 numpy arrays that represent the different line segments
+        that describe the map. The first two elements in the 4x1 numpy array represent 
+        one of the endpt of the wall and the last two elements represent the other endpt of the wall. 
+        The walls are listed in order so the second endpt of a wall should be the first endpt of the next wall 
+        in the list.
+
+    Returns:
+        2x1 numpy array: The coordinate of where the ray collided. Will return empty array if ray
+        never collides with anything.
+    """
     
-    # x3, y3 = start[0], start[1]
-    # x4, y4 = x3 + math.cos(angle), y3 + math.sin(angle) 
     denominator = (walls[:, 0] - walls[:, 2]) * (ray[1] - ray[3]) \
                 - (walls[:, 1] - walls[:, 3]) * (ray[0] - ray[2])
     d_mask = denominator != 0
-    # den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
-    # if den == 0:
-    #     return -1 # did not collide into wall
-    
-    # t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / den
-    # u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / den
     
     t = ((walls[d_mask, 0] - ray[0]) * (ray[1] - ray[3]) \
       - (walls[d_mask, 1] - ray[1]) * (ray[0] - ray[2])) / denominator[d_mask]
@@ -52,8 +73,6 @@ def _cast_ray(ray, walls):
     
     t = t[t_u_mask]
     u = u[t_u_mask]
-    # if t > 0 and t < 1 and u > 0:
-    #     return [x1 + t * (x2 - x1), y1 + t * (y2 - y1)]
     
     colliding_rays_endpt = np.stack((
         walls[:, 0] + t * (walls[:, 2] - walls[:, 0]), 
