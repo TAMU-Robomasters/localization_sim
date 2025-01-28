@@ -188,7 +188,6 @@ class Particles:
             while U > curr_sum:
                 i += 1
                 curr_sum += weights[i][0]
-                print(f"current sum: {curr_sum}")
             new_states[j] = self.states[i]
             
         self.states = new_states

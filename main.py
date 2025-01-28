@@ -1,10 +1,15 @@
 import pygame
 import math
 import numpy as np 
+import time
 from src import map, raycast, mcl, lidar
 
 #TODO upload code to github
 pygame.init()
+
+i = 0
+j = 0
+init_time = time.time()
 
 PLAYER = 1
 TEST_PARTICLE = 2
@@ -119,5 +124,15 @@ while running:
     pygame.display.flip()
     
     dt = clock.tick(60) / 1000
+    
+    d_time = time.time() - init_time
+    j += 1
+    d_i = j - i
+    if d_time >= 1:
+        init_time = time.time()
+        i = j
+        refresh_rate = d_i / d_time 
+        print(f'Refresh_rate = {refresh_rate} Hz')
+        
     
 pygame.quit()
