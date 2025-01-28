@@ -16,7 +16,7 @@ class Particles:
         p_x = self.rand.uniform(bounds[0], bounds[1], (num_particles, 1))
         p_y = self.rand.uniform(bounds[2], bounds[3], (num_particles, 1))
         p_theta = self.rand.uniform(0, 2 * math.pi, (num_particles, 1))
-        self.states = np.concat((p_x, p_y, p_theta), axis=-1)
+        self.states = np.concatenate((p_x, p_y, p_theta), axis=-1)
         self.weights = np.full((num_particles, 1), 1 / num_particles)
         self.particle_radius = 10
         self._state_estimation = None
@@ -88,7 +88,7 @@ class Particles:
             return np.load('src/mcl_pre_compute/' + file_name)
         
         # do pre compute, store it in a file, and return pre compute as contiguous array for O(1) element access
-        total_walls = np.concat([np.concat((boundary[:-1], boundary[1:]), axis=1) for boundary in self.map.boundaries])
+        total_walls = np.concatenate([np.concatenate((boundary[:-1], boundary[1:]), axis=1) for boundary in self.map.boundaries])
         distances = np.empty((arr_size[0], arr_size[1]), dtype=np.float32)
         # projections = np.empty((size[0], size[1], 2), dtype=np.float32)
         # shape = projections.shape

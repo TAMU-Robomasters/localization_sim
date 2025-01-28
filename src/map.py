@@ -61,7 +61,7 @@ def load_map(surface: pygame.Surface, file_name: str):
             compressed_contour = cv2.approxPolyDP(contours[i], epsilon, True)
             compressed_contours.append(compressed_contour)
             # makes iterating through map easier
-            reformatted_contour = np.squeeze(np.concat((compressed_contour, compressed_contour[0:1])))
+            reformatted_contour = np.squeeze(np.concatenate((compressed_contour, compressed_contour[0:1])))
             resized_contour = reformatted_contour.astype(dtype=np.float32) * resize_factor
             map.boundaries.append(resized_contour)    
     map.starting_rect *= resize_factor

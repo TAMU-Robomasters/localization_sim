@@ -23,7 +23,7 @@ def compute_rays(num_rays: int, center, angle, map: map.Map):
     """
     #TODO figure out best way to actually insert in numpy arrary
     rays = np.empty((1, 2))
-    total_walls = np.concat([np.concat((boundary[:-1], boundary[1:]), axis=1) for boundary in map.boundaries]) 
+    total_walls = np.concatenate([np.concatenate((boundary[:-1], boundary[1:]), axis=1) for boundary in map.boundaries]) 
     for ray_angle in np.linspace(0, 2 * math.pi, num_rays, endpoint=False) + angle:
         ray = np.array([center[0], center[1], center[0] + math.cos(ray_angle), center[1] + math.sin(ray_angle)])
         ra_degree = math.degrees(ray_angle)
