@@ -156,24 +156,14 @@ class Particles:
         # use pre computed data for O(1) calculation
         x_indices = ((x_z - self.offset[0]) / self.resamp_factor).astype(int)
         y_indices = ((y_z - self.offset[1]) / self.resamp_factor).astype(int)
-        print(x_indices.shape, y_indices.shape)
-        print(self.distances.shape)
-        print(self.offset)
         distances = self.distances[x_indices, y_indices]
-        print(distances)
-        print(distances.shape)
         
         #TODO create a simulated particle to make sure everything is working
         
         std_dev = 50
         z_hit = 1E3
         probabilities = (1 / math.sqrt(2 * math.pi * (std_dev ** 2))) * np.exp(-0.5 * (distances ** 2) / (std_dev ** 2)) * z_hit
-        print(probabilities)
-        print(probabilities.dtype)
         q = np.prod(probabilities, axis=-1, keepdims=True)
-        print(q.dtype)
-        print(q[:10])
-        print(np.sum(q))
         # update particle weights
         weights = q / np.sum(q) 
         self.weights = weights
