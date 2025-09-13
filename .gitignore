@@ -1,3 +1,18 @@
 
 # numpy complied c files
 **/__pycache__/
+
+
+# Visual Studio code stuff
+.vs
+.vscode
+
+
+# Environment and environment variables
+.venv
+.env
+
+# Logging and other special ignore files
+.log
+.ignore
+*.ignore.*

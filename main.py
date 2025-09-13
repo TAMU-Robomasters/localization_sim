@@ -4,7 +4,6 @@ import numpy as np
 import time
 from src import map, raycast, mcl, lidar
 
-#TODO upload code to github
 pygame.init()
 
 i = 0
