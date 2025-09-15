@@ -1,4 +1,8 @@
 """Implementation of Monte Carlo Localization (MCL) Algorithm"""
+
+#TODO: Separate pygame related functions into a different file/set of methods, so code can transfer to the robot easier
+#TODO: Add docstrings for all classes and funcs
+
 import math
 import numpy as np
 import pygame
@@ -10,12 +14,16 @@ import cv2
 class Particles:
     
     def __init__(self, num_particles, map:map.Map, surface:pygame.Surface):
+        """
+        TODO: Add this docstring. Describe the class as a whole, parameters to __init__,
+        and various important class variables.
+        """
         self.rand = np.random.default_rng()
         self.num_particles = num_particles
         bounds = map.starting_rect
         p_x = self.rand.uniform(bounds[0], bounds[1], (num_particles, 1))
         p_y = self.rand.uniform(bounds[2], bounds[3], (num_particles, 1))
-        p_theta = self.rand.uniform(0, 2 * math.pi, (num_particles, 1))
+        p_theta = self.rand.uniform(0, 2 * math.pi, (num_particles, 1)) # TODO: specify Deg or Rad - Needs to be clear
         self.states = np.concatenate((p_x, p_y, p_theta), axis=-1)
         self.weights = np.full((num_particles, 1), 1 / num_particles)
         self.particle_radius = 10
@@ -44,8 +52,12 @@ class Particles:
             if weight <= 0:
                 continue
             radius = int(max_radius * weight)
-            p_pos = [state[0], state[1]]
-            pygame.draw.circle(surface, color, p_pos, radius)
+            p_pos = (float(state[0]), float(state[1]))
+            try:
+                pygame.draw.circle(surface=surface, color=color, center=p_pos, radius=radius)
+            except TypeError as e:
+                print(f"p_pos: {p_pos} of type {type(p_pos)} with {[type(a) for a in p_pos]}")
+                raise e
             # draw player's orientation
             particle_head_x = state[0] + radius * math.cos(state[2])
             particle_head_y = state[1] + radius * math.sin(state[2])
