@@ -1,9 +1,14 @@
-import pygame
 import math
-import numpy as np 
+import os
 import time
+import pygame
+import numpy as np 
+from dotenv import load_dotenv
 from src import map, raycast, mcl, lidar
 
+load_dotenv()
+
+# Setup
 pygame.init()
 
 i = 0
@@ -13,16 +18,17 @@ init_time = time.time()
 PLAYER = 1
 TEST_PARTICLE = 2
 
-SCREEN_HEIGHT = 720
-SCREEN_WIDTH = 1280
-SCREEN_COLOR = 'black'
+SCREEN_HEIGHT = int(os.getenv("SCREEN_HEIGHT",720))
+SCREEN_WIDTH  = int(os.getenv("SCREEN_WIDTH",1280))
+SCREEN_COLOR  = os.getenv("SCREEN_COLOR","black")
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
 dt = 0
 
-field = map.load_map(screen, 'maps/map3.jpeg')
+print(os.getenv("MAP"))
+field = map.load_map(screen, os.path.join("maps/",str(os.getenv("MAP"))))
 particles = mcl.Particles(1000, field, screen)
 
 player_pos_x = (field.starting_rect[0] + field.starting_rect[1]) / 2
@@ -38,6 +44,8 @@ player_radius = 20
 X_t_minus_1 = particles.state_estimation
 X_t = np.copy(X_t_minus_1)
 
+
+# Game loop
 player = PLAYER
 while running:
     
@@ -131,7 +139,7 @@ while running:
         init_time = time.time()
         i = j
         refresh_rate = d_i / d_time 
-        print(f'Refresh_rate = {refresh_rate} Hz')
+        print(f'Refresh_rate = {refresh_rate:.2f} Hz')
         
     
 pygame.quit()

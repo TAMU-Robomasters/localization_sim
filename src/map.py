@@ -11,19 +11,19 @@ class Map:
     outer_rect: np.ndarray # x_min, width, y_min, height
    
 
-def load_map(surface: pygame.Surface, file_name: str):
+def load_map(surface: pygame.Surface, file_name: str) -> Map:
     map = Map
     map.name = file_name.rstrip('.jpeng')[5:] # skips 'maps/' rm extension
     map_img = cv2.imread(file_name)
-    map_img_size = map_img.shape[:2]
+    map_img_size = map_img.shape[:2] # pyright: ignore[reportOptionalMemberAccess]
     # find starting_rect if there is one
-    hsv = cv2.cvtColor(map_img, cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(map_img, cv2.COLOR_BGR2HSV) # pyright: ignore[reportCallIssue, reportArgumentType]
     red_lower_1 = (170, 100, 100)
     red_upper_1 = (180, 255, 255)
     red_lower_2 = (0, 100, 100)
     red_upper_2 = (15, 255, 255)
-    red_mask_1 = cv2.inRange(hsv, red_lower_1, red_upper_1)
-    red_mask_2 = cv2.inRange(hsv, red_lower_2, red_upper_2)
+    red_mask_1 = cv2.inRange(hsv, red_lower_1, red_upper_1) # pyright: ignore[reportCallIssue, reportArgumentType]
+    red_mask_2 = cv2.inRange(hsv, red_lower_2, red_upper_2) # pyright: ignore[reportCallIssue, reportArgumentType]
     
     red_mask = cv2.bitwise_or(red_mask_1, red_mask_2)
     
@@ -37,7 +37,7 @@ def load_map(surface: pygame.Surface, file_name: str):
 
     
     # find boundaries on the map
-    gray = cv2.cvtColor(map_img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(map_img, cv2.COLOR_BGR2GRAY) # pyright: ignore[reportCallIssue, reportArgumentType]
     ret, thresh = cv2.threshold(gray, 127, 255, 0)
     thresh = cv2.bitwise_not(thresh)
     thresh = cv2.bitwise_and(thresh, cv2.bitwise_not(red_mask)) # filter out starting rect
@@ -68,10 +68,10 @@ def load_map(surface: pygame.Surface, file_name: str):
     x, y, w, h = cv2.boundingRect(compressed_contours[-1])
     map.outer_rect = np.array([x, w, y, h], dtype=np.float32) * resize_factor
     
-    return map
+    return map # pyright: ignore[reportReturnType]
 
 
-def draw_map(surface: pygame.Surface, color: pygame.Color, map: Map, width: int):  
+def draw_map(surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int], map: Map, width: int):  
     for boundary in map.boundaries:
         for i in range(len(boundary) - 1):
             pygame.draw.line(surface, color, pygame.Vector2(*boundary[i]), pygame.Vector2(*boundary[i + 1]), width)

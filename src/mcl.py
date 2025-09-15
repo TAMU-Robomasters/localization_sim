@@ -30,7 +30,7 @@ class Particles:
         self._state_estimation = None
         self.map = map
         self.arr_size = None
-        self.offset = None
+        self.offset = (None, None) # fixes pylance issues and improves intellisense
         self.resamp_factor = None
         self.distances = self.load_pre_compute(surface, map, resamp_factor=2)
         
@@ -39,7 +39,7 @@ class Particles:
     def state_estimation(self):
         return np.sum(self.states * self.weights, axis=0)
 
-    def draw_state_estimation(self, surface: pygame.Surface, color: pygame.Color):
+    def draw_state_estimation(self, surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int]):
         pos = [self.state_estimation[0], self.state_estimation[1]]
         pygame.draw.circle(surface, color, pos, self.particle_radius)
         # draw player's orientation
@@ -47,7 +47,7 @@ class Particles:
         particle_head_y = pos[1] + self.particle_radius * math.sin(self.state_estimation[2])
         pygame.draw.line(surface, "purple", pos, pygame.Vector2(particle_head_x, particle_head_y), 5) 
         
-    def draw_particles(self, surface: pygame.Surface, color: pygame.Color, max_radius: int):
+    def draw_particles(self, surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int], max_radius: int):
         for state, weight in zip(self.states, np.log10(self.weights * 2000).squeeze()):
             if weight <= 0:
                 continue
@@ -70,9 +70,9 @@ class Particles:
         diff = w - v
         
         # project point against all walls, 
-        length_squared = np.vecdot(diff, diff)
+        length_squared = np.vdot(diff, diff)
         # t should limited to [0,1]
-        t = np.expand_dims(np.max(np.expand_dims(np.min(np.expand_dims(np.vecdot(point - v, diff) / length_squared, axis=-1), axis=-1, initial=1), axis=-1), axis=-1, initial=0), axis=-1)
+        t = np.expand_dims(np.max(np.expand_dims(np.min(np.expand_dims(np.vdot(point - v, diff) / length_squared, axis=-1), axis=-1, initial=1), axis=-1), axis=-1, initial=0), axis=-1)
         # projection is the closest point on the wall to the point param
         projections = v + t * (w - v)
         

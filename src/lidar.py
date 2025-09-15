@@ -26,7 +26,7 @@ class Lidar:
         return new_r_distances
     
     # TODO fix this function
-    def draw_measurements(self, surface: pygame.Surface, color: pygame.Color, radius: int):
+    def draw_measurements(self, surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int], radius: int):
         measurements = self.measurements
         angles = np.linspace(0, 2 * math.pi, self.num_rays, endpoint=False) + self.state[2]
         x = self.state[0] + np.cos(angles) * measurements
