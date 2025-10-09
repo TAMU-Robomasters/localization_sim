@@ -8,6 +8,7 @@ import src.map as map
 from localization_python.mcl import MCLImpl
 
 class MCLInterface:
+
     
     def __init__(self, num_particles: int, map: map.Map):
         #TODO: decide if I should rename the keys in map
@@ -28,13 +29,10 @@ class MCLInterface:
         particle_head_y = position[1] + radius * math.sin(state_estimation[2])
         pygame.draw.line(surface, "purple", position, pygame.Vector2(particle_head_x, particle_head_y), 5) 
         
-    def draw_particles(self, surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int], max_radius: int):
+    def draw_particles(self, surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int], radius: int):
         particles = self.mcl.get_particles()
         
-        for state, weight in zip(particles['states']):
-            if weight <= 0:
-                continue
-            radius = int(3)
+        for state in particles['states']:
             p_pos = (float(state[0]), float(state[1]))
             try:
                 pygame.draw.circle(surface=surface, color=color, center=p_pos, radius=radius)
