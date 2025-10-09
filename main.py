@@ -29,19 +29,22 @@ dt = 0
 
 print(os.getenv("MAP"))
 field = map.load_map(screen, os.path.join("maps/",str(os.getenv("MAP"))))
-particles = mcl.Particles(1000, field, screen)
+particles = mcl.MCLInterface(1000, field)
 
-player_pos_x = (field.starting_rect[0] + field.starting_rect[1]) / 2
-player_pos_y = (field.starting_rect[2] + field.starting_rect[3]) / 2
+
+# calculate mid point of starting rect
+player_pos_x = (2 * field.starting_rect['x_min'] + field.starting_rect['width']) / 2
+player_pos_y = (2 * field.starting_rect['y_min'] + field.starting_rect['height']) / 2
+
 player_pos = pygame.Vector2(player_pos_x, player_pos_y)
 test_pos = pygame.Vector2(player_pos_x, player_pos_x)
 player_angle = math.radians(-90)
 test_angle = math.radians(-90)
 
-lidar = lidar.Lidar(np.array([player_pos_x, player_pos_y, player_angle]), field, 12, 4)
+lidar = lidar.Lidar(np.array([player_pos_x, player_pos_y, player_angle]), field, 3, 4)
 
 player_radius = 20
-X_t_minus_1 = particles.state_estimation
+X_t_minus_1 = [player_pos_x, player_pos_y, player_angle]
 X_t = np.copy(X_t_minus_1)
 
 
@@ -121,10 +124,10 @@ while running:
     lidar.state = np.array([player_pos.x, player_pos.y, player_angle])
     measurement = lidar.measurements
     
-    particles.update_particles(control, measurement, screen, field)
+    particles.update(control, measurement)
     lidar.draw_measurements(screen, "yellow", 2)
     particles.draw_particles(screen, "red", 10)
-    particles.draw_state_estimation(screen, "green")
+    particles.draw_state_estimation(screen, "green", player_radius)
     
     X_t_minus_1 = np.copy(X_t)
 
