@@ -5,7 +5,7 @@ import math
 import numpy as np
 import pygame
 import src.map as map
-from localization_python.mcl import MCLImpl
+from localization_python import MCLImpl
 
 class MCLInterface:
 

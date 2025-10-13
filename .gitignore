@@ -2,11 +2,9 @@
 # numpy complied c files
 **/__pycache__/
 
-
 # Visual Studio code stuff
 .vs
 .vscode
-
 
 # Environment and environment variables
 .venv
