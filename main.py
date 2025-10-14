@@ -4,6 +4,7 @@ import os
 import time
 import pygame
 import numpy as np 
+import pathfinding_python as pathfinder
 from dotenv import load_dotenv
 from src import map, raycast, mcl, lidar
 

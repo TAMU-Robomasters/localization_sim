@@ -1,3 +1,6 @@
 [submodule "localization_python"]
 	path = lib/localization_python
 	url = git@github.com:TAMU-Robomasters/localization_python.git
+[submodule "lib/pathfinding_python"]
+	path = lib/pathfinding_python
+	url = git@github.com:TAMU-Robomasters/pathfinding_python.git

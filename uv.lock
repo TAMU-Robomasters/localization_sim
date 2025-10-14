@@ -6,6 +6,7 @@ requires-python = "==3.10.*"
 members = [
     "localization-python",
     "localization-sim",
+    "pathfinding-python",
 ]
 
 [[package]]
@@ -27,6 +28,7 @@ dependencies = [
     { name = "localization-python" },
     { name = "numpy" },
     { name = "opencv-python" },
+    { name = "pathfinding-python" },
     { name = "pygame" },
     { name = "python-dotenv" },
 ]
@@ -36,6 +38,7 @@ requires-dist = [
     { name = "localization-python", editable = "lib/localization_python" },
     { name = "numpy", specifier = "==2.*" },
     { name = "opencv-python", specifier = ">=4.12" },
+    { name = "pathfinding-python", editable = "lib/pathfinding_python" },
     { name = "pygame", specifier = ">=2.6" },
     { name = "python-dotenv", specifier = "==1.1.1" },
 ]
@@ -74,6 +77,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/02/96/213fea371d3cb2f1d537612a105792aa0a6659fb2665b22cad709a75bd94/opencv_python-4.12.0.88-cp37-abi3-win32.whl", hash = "sha256:ff554d3f725b39878ac6a2e1fa232ec509c36130927afc18a1719ebf4fbf4357", size = 30284131, upload-time = "2025-07-07T09:14:08.819Z" },
     { url = "https://files.pythonhosted.org/packages/fa/80/eb88edc2e2b11cd2dd2e56f1c80b5784d11d6e6b7f04a1145df64df40065/opencv_python-4.12.0.88-cp37-abi3-win_amd64.whl", hash = "sha256:d98edb20aa932fd8ebd276a72627dad9dc097695b3d435a4257557bbb49a79d2", size = 39000307, upload-time = "2025-07-07T09:14:16.641Z" },
 ]
+
+[[package]]
+name = "pathfinding-python"
+version = "0.1.0"
+source = { editable = "lib/pathfinding_python" }
 
 [[package]]
 name = "pygame"

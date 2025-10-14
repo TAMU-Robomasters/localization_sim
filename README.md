@@ -13,3 +13,4 @@ A simulation of a robot and environment using pygame to test our localization al
 - run code `uv run main.py`
 
 TODO: Add more setup and usage instructions here.
+TODO: Add workflow examples
