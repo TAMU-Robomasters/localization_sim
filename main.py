@@ -4,10 +4,8 @@ import os
 import time
 import pygame
 import numpy as np 
-import pathfinding_python as pathfinder
 from dotenv import load_dotenv
-from src import map, raycast, mcl, lidar
-
+from src import map, raycast, mcl, lidar, pathfinder
 load_dotenv()
 
 # Setup
@@ -31,6 +29,8 @@ dt = 0
 print(os.getenv("MAP"))
 field = map.load_map(screen, os.path.join("maps/",str(os.getenv("MAP"))))
 particles = mcl.MCLInterface(1000, field)
+pathfinder = pathfinder.PathfinderInterface(field)
+target = [500, 500]
 
 
 # calculate mid point of starting rect
@@ -57,6 +57,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT or keys[pygame.K_q]: # Press 'q' to stop program
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN: # change end target for pathfinding
+            target = event.pos
             
     screen.fill(SCREEN_COLOR)
     if player == PLAYER:
@@ -105,6 +107,10 @@ while running:
     lidar.draw_measurements(screen, "yellow", 2)
     particles.draw_particles(screen, "red", 2)
     particles.draw_state_estimation(screen, "green", player_radius / 2)
+    path = pathfinder.find_path(particles.get_location()[:2], target)
+    pygame.draw.circle(screen, 'red', center=target, radius=4)
+    pathfinder.draw_path(screen, 'white', 2)
+    
     
     X_t_minus_1 = np.copy(X_t)
 

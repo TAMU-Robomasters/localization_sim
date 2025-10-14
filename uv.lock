@@ -37,9 +37,9 @@ dependencies = [
 requires-dist = [
     { name = "localization-python", editable = "lib/localization_python" },
     { name = "numpy", specifier = "==2.*" },
-    { name = "opencv-python", specifier = ">=4.12" },
+    { name = "opencv-python", specifier = ">=4.5,<5" },
     { name = "pathfinding-python", editable = "lib/pathfinding_python" },
-    { name = "pygame", specifier = ">=2.6" },
+    { name = "pygame", specifier = ">=2.6,<3" },
     { name = "python-dotenv", specifier = "==1.1.1" },
 ]
 

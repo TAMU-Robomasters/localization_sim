@@ -39,8 +39,8 @@ def _cast_ray(ray, walls):
     """Given the unit vector of a ray find where it collides against a wall.
     Algorithm basically checks every wall to see if the ray collided against it or not.
     
-    Formula is from https://youtu.be/TOEi6T2mtHo?si=HrVhc1_BFAD5qMuc and was numpy-ified so 
-    that it all runs in C
+    Formula is from [Coding Challenge 145: 2D Raycasting](https://youtu.be/TOEi6T2mtHo?si=HrVhc1_BFAD5qMuc)
+    and was numpy-ified so that it all runs in C
 
     Args:
         ray (4x1 numpy array): the first two elements are the origin of the ray (i.e. LiDAR location).

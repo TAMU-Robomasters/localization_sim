@@ -19,6 +19,9 @@ class MCLInterface:
     def update(self, control, measurement):
         self.mcl.update(control, measurement)
     
+    def get_location(self) -> np.ndarray:
+        return self.mcl.get_estimated_location()
+    
     def draw_state_estimation(self, surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int], radius: int):
         state_estimation = self.mcl.get_estimated_location()
         
