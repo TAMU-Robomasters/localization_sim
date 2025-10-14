@@ -9,8 +9,8 @@ A simulation of a robot and environment using pygame to test our localization al
     `curl -LsSf https://astral.sh/uv/install.sh | sh`
     - Windows
     `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
-    > [!NOTE]
-    > You may have to restart your Windows machine after installing uv
+> [!WARNING]
+> You may have to restart your Windows machine after installing uv
 - sync environment `uv sync`
 - run code `uv run main.py`
 
