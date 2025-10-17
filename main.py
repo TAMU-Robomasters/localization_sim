@@ -11,121 +11,112 @@ load_dotenv()
 # Setup
 pygame.init()
 
-i = 0
-j = 0
-init_time = time.time()
-
-PLAYER = 1
-
+# Constants
+MAX_FPS = 60
 SCREEN_HEIGHT = int(os.getenv("SCREEN_HEIGHT",720))
 SCREEN_WIDTH  = int(os.getenv("SCREEN_WIDTH",1280))
 SCREEN_COLOR  = os.getenv("SCREEN_COLOR","black")
 
+# Pygame 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
-dt = 0
 
-print(os.getenv("MAP"))
+# Init classes from local packages
 field = map.load_map(screen, os.path.join("maps/",str(os.getenv("MAP"))))
+
+robot_pos_x = (2 * field.starting_rect['x_min'] + field.starting_rect['width']) / 2
+robot_pos_y = (2 * field.starting_rect['y_min'] + field.starting_rect['height']) / 2
+robot_pos = pygame.Vector2(robot_pos_x, robot_pos_y)
+robot_angle = math.radians(-90)
+robot_radius = 20
+lidar = lidar.Lidar(np.array([robot_pos_x, robot_pos_y, robot_angle]), field, 3, 4)
+
 particles = mcl.MCLInterface(1000, field)
+
 pathfinder = pathfinder.PathfinderInterface(field)
-target = [500, 500]
+pathfinding_target = [500, 500]
 
-
-# calculate mid point of starting rect
-player_pos_x = (2 * field.starting_rect['x_min'] + field.starting_rect['width']) / 2
-player_pos_y = (2 * field.starting_rect['y_min'] + field.starting_rect['height']) / 2
-
-player_pos = pygame.Vector2(player_pos_x, player_pos_y)
-test_pos = pygame.Vector2(player_pos_x, player_pos_x)
-player_angle = math.radians(-90)
-test_angle = math.radians(-90)
-
-lidar = lidar.Lidar(np.array([player_pos_x, player_pos_y, player_angle]), field, 3, 4)
-
-player_radius = 20
-X_t_minus_1 = [player_pos_x, player_pos_y, player_angle]
-X_t = np.copy(X_t_minus_1)
-
+# init odometry
+past_odometry_data = [robot_pos_x, robot_pos_y, robot_angle]
+curr_odometry_data = np.copy(past_odometry_data)
 
 # Game loop
-player = PLAYER
-while running:
-    
+while running: 
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT or keys[pygame.K_q]: # Press 'q' to stop program
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN: # change end target for pathfinding
-            target = event.pos
-            
+        elif event.type == pygame.MOUSEBUTTONDOWN: # change target for pathfinding
+            pathfinding_target = event.pos
+    
+    # make screen blank           
     screen.fill(SCREEN_COLOR)
-    if player == PLAYER:
-        # handle keyboard input     
-        if keys[pygame.K_w]:
-            player_pos.y += 200 * dt * math.sin(player_angle)
-            player_pos.x += 200 * dt * math.cos(player_angle)
-            X_t[1] += 200 * dt * math.sin(X_t[2])
-            X_t[0] += 200 * dt * math.cos(X_t[2])
-        if keys[pygame.K_s]:
-            player_pos.y -= 200 * dt * math.sin(player_angle)
-            player_pos.x -= 200 * dt * math.cos(player_angle)
-            X_t[1] -= 200 * dt * math.sin(X_t[2])
-            X_t[0] -= 200 * dt * math.cos(X_t[2])
-        if keys[pygame.K_a]:
-            player_pos.x += 200 * dt * math.sin(player_angle)
-            player_pos.y -= 200 * dt * math.cos(player_angle) 
-            X_t[0] += 200 * dt * math.sin(X_t[2])
-            X_t[1] -= 200 * dt * math.cos(X_t[2]) 
-        if keys[pygame.K_d]:
-            player_pos.x -= 200 * dt * math.sin(player_angle)
-            player_pos.y += 200 * dt * math.cos(player_angle)
-            X_t[0] -= 200 * dt * math.sin(X_t[2])
-            X_t[1] += 200 * dt * math.cos(X_t[2])
-        if keys[pygame.K_j]:
-            player_angle -= (math.pi) * 1.2 * dt
-            X_t[2] -= (math.pi) * 1.2 * dt
-        if keys[pygame.K_k]:
-            player_angle += (math.pi) * 1.2 * dt
-            X_t[2] += (math.pi) * 1.2 * dt
-        
-    pygame.draw.circle(screen, "red", player_pos, player_radius)
-    # draw player's orientation
-    player_head_x = player_pos.x + player_radius * math.cos(player_angle)
-    player_head_y = player_pos.y + player_radius * math.sin(player_angle)
-    pygame.draw.line(screen, "purple", player_pos, pygame.Vector2(player_head_x, player_head_y), 5)
+    
+    # update robot position
+    d_x = 0
+    d_y = 0
+    d_theta = 0
+    if keys[pygame.K_w]:
+        d_y += 200 * dt * math.sin(robot_angle)
+        d_x += 200 * dt * math.cos(robot_angle)
+    if keys[pygame.K_s]:
+        d_y -= 200 * dt * math.sin(robot_angle)
+        d_x -= 200 * dt * math.cos(robot_angle)
+    if keys[pygame.K_a]:
+        d_x += 200 * dt * math.sin(robot_angle)
+        d_y -= 200 * dt * math.cos(robot_angle) 
+    if keys[pygame.K_d]:
+        d_x -= 200 * dt * math.sin(robot_angle)
+        d_y += 200 * dt * math.cos(robot_angle)
+    if keys[pygame.K_j]:
+        d_theta -= (math.pi) * 1.2 * dt
+    if keys[pygame.K_k]:
+        d_theta += (math.pi) * 1.2 * dt
+    robot_pos.x += d_x
+    robot_pos.y += d_y
+    robot_angle += d_theta
+    
+    # update current odometry data 
+    rand = np.random.default_rng()
+    odometry_noise = rand.normal(np.zeros(3), 0.05*np.abs(np.array([d_x, d_y, d_theta]))) 
+    curr_odometry_data += np.array([d_x, d_y, d_theta]) + odometry_noise
+    
+    # draw robot
+    pygame.draw.circle(screen, "red", robot_pos, robot_radius)
+    robot_orientation_x = robot_pos.x + robot_radius * math.cos(robot_angle)
+    robot_orientation_y = robot_pos.y + robot_radius * math.sin(robot_angle)
+    pygame.draw.line(screen, "purple", robot_pos, pygame.Vector2(robot_orientation_x, robot_orientation_y), 5)
     
     map.draw_map(screen, "blue", field, 3)
     
-    # acquire measurements and fake odometry data
-    control = np.stack((X_t_minus_1, X_t))
-    lidar.state = np.array([player_pos.x, player_pos.y, player_angle])
+    # acquire LiDAR measurements and odometry data
+    control = np.stack((past_odometry_data, curr_odometry_data))
+    lidar.state = np.array([robot_pos.x, robot_pos.y, robot_angle])
     measurement = lidar.measurements
     
-    particles.update(control, measurement)
     lidar.draw_measurements(screen, "yellow", 2)
+    
+    # robot estimation
+    particles.update(control, measurement)
     particles.draw_particles(screen, "red", 2)
-    particles.draw_state_estimation(screen, "green", player_radius / 2)
-    path = pathfinder.find_path(particles.get_location()[:2], target)
-    pygame.draw.circle(screen, 'red', center=target, radius=4)
+    particles.draw_state_estimation(screen, "green", robot_radius / 2)
+    
+    # path finding
+    pathfinder.find_path(particles.get_location()[:2], pathfinding_target)
     pathfinder.draw_path(screen, 'white', 2)
     
-    
-    X_t_minus_1 = np.copy(X_t)
+    # update past odometry data
+    past_odometry_data = np.copy(curr_odometry_data)
 
     pygame.display.flip()
     
-    dt = clock.tick(60) / 1000
+    # limits FPS to 60
+    # dt is delta time in seconds since last frame
+    # Used for framerate independent physics
+    dt = clock.tick(MAX_FPS) / 1000    
     
-    d_time = time.time() - init_time
-    j += 1
-    d_i = j - i
-    if d_time >= 1:
-        init_time = time.time()
-        i = j
-        refresh_rate = d_i / d_time 
-        print(f'Refresh_rate = {refresh_rate:.2f} Hz')
-        
-    
+    print(f'fps: {clock.get_fps()}')
+           
 pygame.quit()
+

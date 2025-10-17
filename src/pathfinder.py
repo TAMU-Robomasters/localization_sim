@@ -18,16 +18,18 @@ class PathfinderInterface:
             polygon = [pfp.Point(point[0], point[1]) for point in inner_boundary]
             polygons.append(polygon)
         
-        cost_zones = [(polygon, 1) for polygon in polygons] #don't really know what I'm doing :/
-        
-        return pfp.constructVizGraph(polygons, cost_zones)
+        return pfp.constructVizGraph(polygons, [])
     
-    def find_path(self, start: List[float], end: List[float]) -> List[List[float]]:
+    def find_path(self, start: List[float], end: List[float]) -> None:
         path = self._vg.search(start[0], start[1], end[0], end[1])
-        path = [[point.x, point.y] for point in path]
+        path = np.array([[point.x, point.y] for point in path])
         self._path = path
-        return path
     
     def draw_path(self, surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int], width: int) -> None:
+        # draw path
         for i in range(len(self._path) - 1):
             pygame.draw.line(surface, color, pygame.Vector2(*self._path[i]), pygame.Vector2(*self._path[i + 1]), width)
+        
+        # draw target position
+        if len(self._path) > 0:
+            pygame.draw.circle(surface, 'red', center=(self._path[-1]), radius=width*2)
