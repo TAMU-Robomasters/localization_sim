@@ -22,7 +22,7 @@ Guides for common tasks
 ### How to Interact with Simulation
 - Use 'wasd' to move robot around
 - Use 'jk' to rotate robot
-- Double click on the screen to assign a new target position for pathfinding
+- Click on the screen to assign a new target position for pathfinding
 - Type 'q' to exit program
 
 ### Adding and removing non-local packages/dependencies
