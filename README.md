@@ -4,8 +4,10 @@ A simulation of a robot, sensors, and environment using pygame to test our auto-
 ## Setup
 - Initialize the submodule `git submodule update --init`
 - Make sure to copy the `.env.template` file to a file named `.env` before running.
+- Make sure you have a c++ compiler installed
+    - Windows: I've had success using the [MSVC 2022 compiler toolset](https://code.visualstudio.com/docs/cpp/config-msvc). **DON'T use a developer command prompt when you build**
 - Install [uv](https://docs.astral.sh/uv/)
-    - Mac/Linux
+    - Mac/Linux/WSL
     `curl -LsSf https://astral.sh/uv/install.sh | sh`
     - Windows
     `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
@@ -15,6 +17,9 @@ A simulation of a robot, sensors, and environment using pygame to test our auto-
 - Run code `uv run main.py`
 > [!IMPORTANT]
 > If someone changes the code in a submodule you have to run `git pull --recurse-submodules` instead of `git pull`. `git pull` only updates a pointer to a submodule commit it does NOT update the actually submodule code
+
+## Trouble Shooting
+Sometimes your python might not have developer headers that are used by pybind11 which will result in a cmake error. You can either download the developer headers or use `uv sync --managed-python`. uv can either use the python installed on your system or fetch it's own python version with developer headers. `--managed-python` forces uv to fetch it's own python version and not use your system python.
 
 ## How To
 Guides for common tasks
