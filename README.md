@@ -55,7 +55,7 @@ All submodules are in the `lib/` directory.
     - Make sure `uv run code.py` doesn't fail
     - Commit and push
 - Go to main module repo
-- Add submodule `git submodule add <web-url or ssh-key> lib/<submodule-name>
+- Add submodule `git submodule add <web-url or ssh-key> lib/<submodule-name>`
 - Add local dependency to uv `uv add lib/<submodule-name>`
 - Add code that uses that submodule and test it with `uv run code.py`
 
