@@ -97,7 +97,7 @@ while running:
     
     lidar.draw_measurements(screen, "yellow", 2)
     
-    # robot estimation
+    # robot location estimation
     particles.update(control, measurement)
     particles.draw_particles(screen, "red", 2)
     particles.draw_state_estimation(screen, "green", robot_radius / 2)
@@ -109,9 +109,10 @@ while running:
     # update past odometry data
     past_odometry_data = np.copy(curr_odometry_data)
 
+    # update display with the new drawings
     pygame.display.flip()
     
-    # limits FPS to 60
+    # limits FPS to MAX_FPS
     # dt is delta time in seconds since last frame
     # Used for framerate independent physics
     dt = clock.tick(MAX_FPS) / 1000    
