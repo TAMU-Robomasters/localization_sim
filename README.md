@@ -18,7 +18,7 @@ A simulation of a robot, sensors, and environment using pygame to test our auto-
 > [!IMPORTANT]
 > If someone changes the code in a submodule you have to run `git pull --recurse-submodules` instead of `git pull`. `git pull` only updates a pointer to a submodule commit it does NOT update the actually submodule code
 
-## Trouble Shooting
+## Troubleshooting
 Sometimes your python might not have developer headers that are used by pybind11 which will result in a cmake error. You can either download the developer headers or use `uv sync --managed-python`. uv can either use the python installed on your system or fetch it's own python version with developer headers. `--managed-python` forces uv to fetch it's own python version and not use your system python.
 
 ## How To
