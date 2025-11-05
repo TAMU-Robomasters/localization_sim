@@ -14,8 +14,15 @@ class Map:
 
 def load_map(surface: pygame.Surface, file_name: str) -> Map:
     map = Map
-    map.name = file_name.rstrip('.jpeng')[5:] # skips 'maps/' rm extension
-    map_img = cv2.imread(file_name)
+    pgm = False
+    if('.pgm' in file_name):
+        map.name = file_name.rstrip('.pgm')[5:] # skips 'maps/' rm extension
+        map_img = cv2.imread(file_name, -1)
+        map_img = cv2.cvtColor(map_img, cv2.COLOR_GRAY2BGR)
+        pgm = True
+    else:
+        map.name = file_name.rstrip('.jpeng')[5:] # skips 'maps/' rm extension
+        map_img = cv2.imread(file_name)
     map_img_size = map_img.shape[:2] # pyright: ignore[reportOptionalMemberAccess]
     
     # determine how to resize map to fit the screen
@@ -44,6 +51,9 @@ def load_map(surface: pygame.Surface, file_name: str) -> Map:
         # find rectangle estimation of drawing
         x, y, w, h = [value * resize_factor for value in cv2.boundingRect(red_contours)]
         map.starting_rect = {"x_min": x, "width": w, "y_min": y, "height": h}
+    
+    if pgm:
+        map.starting_rect = {"x_min": 0, "width": 20, "y_min": 0, "height": 20}
 
     
     # find boundaries on the map

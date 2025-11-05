@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: localization-sim
+Version: 0.1.0
+Requires-Python: ==3.10.*
+Requires-Dist: localization-python
+Requires-Dist: numpy==2.*
+Requires-Dist: opencv-python<5,>=4.5
+Requires-Dist: pathfinding-python
+Requires-Dist: pygame<3,>=2.6
+Requires-Dist: python-dotenv==1.1.1

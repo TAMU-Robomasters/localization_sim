@@ -17,18 +17,19 @@ class Lidar:
     
     @property
     def measurements(self):
-        rays = raycast.compute_rays(self.num_rays, self.state[:2], self.state[2], self.map)
+        rays, angles = raycast.compute_rays(self.num_rays, self.state[:2], self.state[2], self.map)
         diff = rays - self.state[0:2]
         r_distances = np.sqrt(np.sum(diff ** 2, axis=-1))
         # add noise
         new_r_distances = r_distances + self.rand.normal(scale=self.noise, size=(r_distances.size,))
     
-        return new_r_distances
+        return new_r_distances, angles
     
     # TODO fix this function
     def draw_measurements(self, surface: pygame.Surface, color: pygame.Color | str | tuple[int, int, int] | list[int], radius: int):
-        measurements = self.measurements
-        angles = np.linspace(0, 2 * math.pi, self.num_rays, endpoint=False) + self.state[2]
+        measurements, angles = self.measurements
+        # angles = np.linspace(0, 2 * math.pi, self.num_rays, endpoint=False) + self.state[2]
+
         x = self.state[0] + np.cos(angles) * measurements
         y = self.state[1] + np.sin(angles) * measurements
         measurement_endpts = np.stack((x, y), axis=-1)

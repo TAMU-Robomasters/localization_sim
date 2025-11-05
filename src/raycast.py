@@ -23,6 +23,7 @@ def compute_rays(num_rays: int, center, angle, map: map.Map):
     """
     #TODO figure out best way to actually insert in numpy arrary
     rays = np.empty((1, 2))
+    angles = np.empty((1, 1))
     total_walls = np.concatenate([np.concatenate((boundary[:-1], boundary[1:]), axis=1) for boundary in map.boundaries]) 
     for ray_angle in np.linspace(0, 2 * math.pi, num_rays, endpoint=False) + angle:
         ray = np.array([center[0], center[1], center[0] + math.cos(ray_angle), center[1] + math.sin(ray_angle)])
@@ -31,8 +32,14 @@ def compute_rays(num_rays: int, center, angle, map: map.Map):
         ray = _cast_ray(ray, total_walls)
         if ray.any():
             rays = np.append(rays, ray.reshape((1,2)), axis=0)
+            angles = np.append(angles, ray_angle)
+
+        # else:
+        #     rays = np.append(rays, ray.reshape((1,2)), axis=0)
+
+
     
-    return rays[1:]
+    return (rays[1:], angles[1:])
 
 
 def _cast_ray(ray, walls):

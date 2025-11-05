@@ -1,0 +1,6 @@
+localization-python
+numpy==2.*
+opencv-python<5,>=4.5
+pathfinding-python
+pygame<3,>=2.6
+python-dotenv==1.1.1

@@ -34,7 +34,8 @@ lidar = lidar.Lidar(np.array([robot_pos_x, robot_pos_y, robot_angle]), field, 3,
 
 particles = mcl.MCLInterface(1000, field)
 
-pathfinder = pathfinder.PathfinderInterface(field)
+#TODO something in pathfinder causes the program to not respond
+# pathfinder = pathfinder.PathfinderInterface(field)
 pathfinding_target = [500, 500]
 
 # init odometry
@@ -93,18 +94,20 @@ while running:
     # acquire LiDAR measurements and odometry data
     control = np.stack((past_odometry_data, curr_odometry_data))
     lidar.state = np.array([robot_pos.x, robot_pos.y, robot_angle])
-    measurement = lidar.measurements
+    measurement, angles = lidar.measurements
     
     lidar.draw_measurements(screen, "yellow", 2)
     
+    #TODO map not being fully enclosed causes errors, need to test with proper map
+    #     might be able to fix this by also passing the angles of the rays to .update
     # robot location estimation
-    particles.update(control, measurement)
-    particles.draw_particles(screen, "red", 2)
-    particles.draw_state_estimation(screen, "green", robot_radius / 2)
+    # particles.update(control, measurement)
+    # particles.draw_particles(screen, "red", 2)
+    # particles.draw_state_estimation(screen, "green", robot_radius / 2)
     
     # path finding
-    pathfinder.find_path(particles.get_location()[:2], pathfinding_target)
-    pathfinder.draw_path(screen, 'white', 2)
+    # pathfinder.find_path(particles.get_location()[:2], pathfinding_target)
+    # pathfinder.draw_path(screen, 'white', 2)
     
     # update past odometry data
     past_odometry_data = np.copy(curr_odometry_data)
