@@ -117,7 +117,7 @@ while running:
     # Used for framerate independent physics
     dt = clock.tick(MAX_FPS) / 1000    
     
-    print(f'fps: {clock.get_fps()}')
+    print(f'fps: {clock.get_fps():.3f}')
            
 pygame.quit()
 

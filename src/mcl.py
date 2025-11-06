@@ -26,7 +26,17 @@ class MCLInterface:
         state_estimation = self.mcl.get_estimated_location()
         
         position = [state_estimation[0], state_estimation[1]]
-        pygame.draw.circle(surface, color, position, radius)
+        try:
+            pygame.draw.circle(surface, color, position, radius)
+        except TypeError as e:
+            # print(f"self.mcl.states ({type(self.mcl.states)}):",self.mcl.states)
+            # print(f"self.mcl.weights ({type(self.mcl.weights)}):",self.mcl.weights)
+            print(f"state_estimation ({type(state_estimation)}):",state_estimation)
+            print(f"surface ({type(surface)}):",surface)
+            print(f"color ({type(color)}):",color)
+            print(f"position ({type(position)}):",position)
+            print(f"radius ({type(radius)}):",radius)
+            raise e
         # draw player's orientation
         particle_head_x = position[0] + radius * math.cos(state_estimation[2])
         particle_head_y = position[1] + radius * math.sin(state_estimation[2])
