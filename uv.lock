@@ -34,12 +34,42 @@ wheels = [
 ]
 
 [[package]]
+name = "cupy-cuda13x"
+version = "13.6.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "fastrlock" },
+    { name = "numpy" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1c/4e/94a7f6c18a63810fcebc7f4bb4c093cc850aafb72f1b5be6e2590d4fdeb5/cupy_cuda13x-13.6.0-cp310-cp310-manylinux2014_aarch64.whl", hash = "sha256:93896a5d36788eadb8d983cb0076c1203df6f1d5ef148464680e8f1b13da2235", size = 65332783, upload-time = "2025-08-18T08:32:09.123Z" },
+    { url = "https://files.pythonhosted.org/packages/71/64/b08348fb125c868711b1c879f075a70e63e7e9b169407e39c75baa99a5b7/cupy_cuda13x-13.6.0-cp310-cp310-manylinux2014_x86_64.whl", hash = "sha256:a6682bdad8e40fff560e29588fef20d08a1c036e9634dac6fe9c85ea094e448c", size = 53937433, upload-time = "2025-08-18T08:32:13.455Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/44/2eec8b0225a8265f8661821edb4e80f120adac73c36b57f24219826276d1/cupy_cuda13x-13.6.0-cp310-cp310-win_amd64.whl", hash = "sha256:53a9780f746e53958087ed44f5a8a7f1faf2268f6fefc2a48070d25261299db4", size = 33984710, upload-time = "2025-08-18T08:32:17.103Z" },
+]
+
+[[package]]
 name = "cycler"
 version = "0.12.1"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a9/95/a3dbbb5028f35eafb79008e7522a75244477d2838f38cbb722248dabc2a8/cycler-0.12.1.tar.gz", hash = "sha256:88bb128f02ba341da8ef447245a9e138fae777f6a23943da4540077d3601eb1c", size = 7615, upload-time = "2023-10-07T05:32:18.335Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e7/05/c19819d5e3d95294a6f5947fb9b9629efb316b96de511b418c53d245aae6/cycler-0.12.1-py3-none-any.whl", hash = "sha256:85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30", size = 8321, upload-time = "2023-10-07T05:32:16.783Z" },
+]
+
+[[package]]
+name = "fastrlock"
+version = "0.8.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/73/b1/1c3d635d955f2b4bf34d45abf8f35492e04dbd7804e94ce65d9f928ef3ec/fastrlock-0.8.3.tar.gz", hash = "sha256:4af6734d92eaa3ab4373e6c9a1dd0d5ad1304e172b1521733c6c3b3d73c8fa5d", size = 79327, upload-time = "2024-12-17T11:03:39.638Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e7/02/3f771177380d8690812d5b2b7736dc6b6c8cd1c317e4572e65f823eede08/fastrlock-0.8.3-cp310-cp310-macosx_11_0_universal2.whl", hash = "sha256:cc5fa9166e05409f64a804d5b6d01af670979cdb12cd2594f555cb33cdc155bd", size = 55094, upload-time = "2024-12-17T11:01:49.721Z" },
+    { url = "https://files.pythonhosted.org/packages/be/b4/aae7ed94b8122c325d89eb91336084596cebc505dc629b795fcc9629606d/fastrlock-0.8.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.manylinux_2_24_aarch64.whl", hash = "sha256:7a77ebb0a24535ef4f167da2c5ee35d9be1e96ae192137e9dc3ff75b8dfc08a5", size = 48220, upload-time = "2024-12-17T11:01:51.071Z" },
+    { url = "https://files.pythonhosted.org/packages/96/87/9807af47617fdd65c68b0fcd1e714542c1d4d3a1f1381f591f1aa7383a53/fastrlock-0.8.3-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_24_i686.whl", hash = "sha256:d51f7fb0db8dab341b7f03a39a3031678cf4a98b18533b176c533c122bfce47d", size = 49551, upload-time = "2024-12-17T11:01:52.316Z" },
+    { url = "https://files.pythonhosted.org/packages/9d/12/e201634810ac9aee59f93e3953cb39f98157d17c3fc9d44900f1209054e9/fastrlock-0.8.3-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_24_x86_64.whl", hash = "sha256:767ec79b7f6ed9b9a00eb9ff62f2a51f56fdb221c5092ab2dadec34a9ccbfc6e", size = 49398, upload-time = "2024-12-17T11:01:53.514Z" },
+    { url = "https://files.pythonhosted.org/packages/15/a1/439962ed439ff6f00b7dce14927e7830e02618f26f4653424220a646cd1c/fastrlock-0.8.3-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:0d6a77b3f396f7d41094ef09606f65ae57feeb713f4285e8e417f4021617ca62", size = 53334, upload-time = "2024-12-17T11:01:55.518Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/9e/1ae90829dd40559ab104e97ebe74217d9da794c4bb43016da8367ca7a596/fastrlock-0.8.3-cp310-cp310-musllinux_1_1_aarch64.whl", hash = "sha256:92577ff82ef4a94c5667d6d2841f017820932bc59f31ffd83e4a2c56c1738f90", size = 52495, upload-time = "2024-12-17T11:01:57.76Z" },
+    { url = "https://files.pythonhosted.org/packages/e5/8c/5e746ee6f3d7afbfbb0d794c16c71bfd5259a4e3fb1dda48baf31e46956c/fastrlock-0.8.3-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:3df8514086e16bb7c66169156a8066dc152f3be892c7817e85bf09a27fa2ada2", size = 51972, upload-time = "2024-12-17T11:02:01.384Z" },
+    { url = "https://files.pythonhosted.org/packages/76/a7/8b91068f00400931da950f143fa0f9018bd447f8ed4e34bed3fe65ed55d2/fastrlock-0.8.3-cp310-cp310-win_amd64.whl", hash = "sha256:001fd86bcac78c79658bac496e8a17472d64d558cd2227fdc768aa77f877fe40", size = 30946, upload-time = "2024-12-17T11:02:03.491Z" },
 ]
 
 [[package]]
@@ -90,11 +120,15 @@ name = "localization-python"
 version = "0.1.0"
 source = { editable = "lib/localization_python" }
 dependencies = [
+    { name = "cupy-cuda13x" },
     { name = "numpy" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "numpy", specifier = "==2" }]
+requires-dist = [
+    { name = "cupy-cuda13x" },
+    { name = "numpy", specifier = "==2" },
+]
 
 [[package]]
 name = "localization-sim"
