@@ -14,7 +14,7 @@ class MCLInterface:
         #TODO: decide if I should rename the keys in map
         map_bounds = {"x": map.outer_rect["x_min"], "y": map.outer_rect["y_min"], "w": map.outer_rect["width"], "h": map.outer_rect["height"]}
         starting_area = {"x": map.starting_rect["x_min"], "y": map.starting_rect["y_min"], "w": map.starting_rect["width"], "h": map.starting_rect["height"]}
-        self.mcl = MCLImpl(num_particles=1000, walls=map.boundaries, map_bounds=map_bounds, starting_area=starting_area, force_cupy=force_cupy)   
+        self.mcl = MCLImpl(num_particles=num_particles, walls=map.boundaries, map_bounds=map_bounds, starting_area=starting_area, force_cupy=force_cupy)   
          
     def update(self, control, measurement):
         self.mcl.update(control, measurement)
