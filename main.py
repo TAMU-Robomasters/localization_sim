@@ -20,7 +20,7 @@ DRAW_PARTICLES = bool(os.getenv("DRAW_PARTICLES","true").lower()=="true")
 SCREEN_HEIGHT = int(os.getenv("SCREEN_HEIGHT",720))
 SCREEN_WIDTH  = int(os.getenv("SCREEN_WIDTH",1280))
 SCREEN_COLOR  = os.getenv("SCREEN_COLOR","black")
-MAX_PARTICLES = int(os.getenv("MAX_PARTICLES",1000))
+MAX_PARTICLES = int(os.getenv("MAX_PARTICLES",1000)) # Note: is unstable if not 1000
 
 print(f"Max particles: {MAX_PARTICLES}")
 
@@ -92,11 +92,11 @@ while running:
     robot_angle += d_theta
     
     # update current odometry data 
-    odometry_noise = np.random.normal(loc=np.zeros(3), scale=0.05*np.abs(np.array([d_x, d_y, d_theta]))) 
-    curr_odometry_data += np.array([d_x, d_y, d_theta]) + odometry_noise
+    odometry_noise = np.random.normal(loc=np.zeros(3), scale=0.05*np.abs(np.asarray([d_x, d_y, d_theta]))) 
+    curr_odometry_data += np.asarray([d_x, d_y, d_theta]) + odometry_noise
     
     # draw robot
-    pygame.draw.circle(screen, "red", robot_pos, robot_radius)
+    pygame.draw.circle(screen, "cyan", robot_pos, robot_radius)
     robot_orientation_x = robot_pos.x + robot_radius * math.cos(robot_angle)
     robot_orientation_y = robot_pos.y + robot_radius * math.sin(robot_angle)
     pygame.draw.line(screen, "purple", robot_pos, pygame.Vector2(robot_orientation_x, robot_orientation_y), 5)
@@ -111,16 +111,23 @@ while running:
     lidar.draw_measurements(screen, "yellow", 2)
 
     if USE_CUPY:
-        control = cp.array(control)
-        measurement = cp.array(measurement)
+        control = cp.asarray(control)
+        measurement = cp.asarray(measurement)
     
+    # from cupyx.profiler import benchmark
+    # print(benchmark(particles.update, (control, measurement), n_repeat=100))
+    # exit(1)
+
     # robot location estimation
     particles.update(control, measurement)
 
-    if DRAW_PARTICLES:
-        particles.draw_particles(screen, "red", 2)
-        particles.draw_state_estimation(screen, "green", robot_radius / 2)
 
+    particles.draw_state_estimation(screen, "green", robot_radius / 2)
+
+    if DRAW_PARTICLES:
+        particles.draw_particles(screen, "red", 3)
+
+    
     if USE_PATHFINDER:
         # path finding
         pathfinder.find_path(particles.get_location()[:2], pathfinding_target)
