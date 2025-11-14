@@ -10,6 +10,7 @@ from src import map, raycast, mcl, lidar, pathfinder
 load_dotenv()
 
 # Setup
+timezero = time.perf_counter_ns()
 pygame.init()
 
 # Constants
@@ -54,6 +55,15 @@ if USE_PATHFINDER:
 # init odometry
 past_odometry_data = np.array([robot_pos_x, robot_pos_y, robot_angle])
 curr_odometry_data = np.copy(past_odometry_data)
+
+timestart_loop = time.perf_counter_ns()
+
+t = timestart_loop-timezero
+print(f"Initialization took {t} ns of CPU time ({t/(10**9)} s)")
+
+time_file = open("time_file.csv","w+") #TODO: remove this later
+time_file.write("TimeLoop, TimePF\n")
+
 
 # Game loop
 while running: 
@@ -114,6 +124,8 @@ while running:
         control = cp.asarray(control)
         measurement = cp.asarray(measurement)
     
+    timeend_loop = time.perf_counter_ns()
+    timestart_pf = time.perf_counter_ns()
     # from cupyx.profiler import benchmark
     # print(benchmark(particles.update, (control, measurement), n_repeat=100))
     # exit(1)
@@ -121,6 +133,17 @@ while running:
     # robot location estimation
     particles.update(control, measurement)
 
+    timeend_pf = time.perf_counter_ns()
+    t_l = timeend_loop - timestart_loop
+    t_p = timeend_pf - timestart_pf
+    # limits FPS to MAX_FPS
+    # dt is delta time in seconds since last frame
+    # Used for framerate independent physics
+    dt = clock.tick(MAX_FPS) / 1000    
+    timestart_loop = time.perf_counter_ns()
+
+    print(f"CPU times:    loop: {t_l} ns ({t_l/(10**9)} s)      pf:  {t_p} ns ({t_p/(10**9)} s)")
+    time_file.write(f"{t_l}, {t_p}\n")
 
     particles.draw_state_estimation(screen, "green", robot_radius / 2)
 
@@ -139,12 +162,9 @@ while running:
     # update display with the new drawings
     pygame.display.flip()
     
-    # limits FPS to MAX_FPS
-    # dt is delta time in seconds since last frame
-    # Used for framerate independent physics
-    dt = clock.tick(MAX_FPS) / 1000    
     
     print(f'fps: {clock.get_fps():.3f}')
            
 pygame.quit()
 
+time_file.close()
