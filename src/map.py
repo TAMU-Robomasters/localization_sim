@@ -26,12 +26,12 @@ def load_map(surface: pygame.Surface, file_name: str) -> Map:
     map_img_size = map_img.shape[:2] # pyright: ignore[reportOptionalMemberAccess]
     
     # determine how to resize map to fit the screen
-    surface_ratio = surface.get_height() / float(surface.get_width())
+    surface_ratio = 1080 / float(1920)
     map_ratio = map_img_size[0] / float(map_img_size[1])
     if map_ratio >= surface_ratio:
-        resize_factor = surface.get_height() / float(map_img_size[0])
+        resize_factor = 1080 / float(map_img_size[0])
     else:
-        resize_factor = surface.get_width() / float(map_img_size[1])
+        resize_factor = 1920 / float(map_img_size[1])
     
     # find starting_rect if there is one
     hsv = cv2.cvtColor(map_img, cv2.COLOR_BGR2HSV) # pyright: ignore[reportCallIssue, reportArgumentType]
